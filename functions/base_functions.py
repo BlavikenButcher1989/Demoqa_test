@@ -3,9 +3,9 @@ from selenium.webdriver.support.wait import WebDriverWait as W
 
 
 class BaseFunctions:
-    def __init__(self, driver):
+    def __init__(self, driver, url):
         self.driver = driver
-        self.url = 'https://demoqa.com/text-box'
+        self.url = url
 
     def open_site(self):
         self.driver.get(self.url)
@@ -29,10 +29,10 @@ class BaseFunctions:
         return W(self.driver, 10).until(EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):
-        self.driver.execute_script("argument[0].scrollIntoView;", element)
+        self.driver.execute_script("arguments[0].scrollIntoView;", element)
 
     def click_on_element(self, element):
-        self.driver.execute_script("argument{0}.click();", element)
+        self.driver.execute_script("arguments[0].click();", element)
 
 
     def delete_footer(self):
@@ -45,5 +45,5 @@ class BaseFunctions:
         self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
     def scroll_up(self):
-        self.driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        self.driver.execute_script("window.scrollTo(0, -document.body.scrollHeight);")
 
