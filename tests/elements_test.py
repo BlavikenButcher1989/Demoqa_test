@@ -56,7 +56,6 @@ class TestElements:
             web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
             web_table_page.open_site()
             input_data = web_table_page.add_new_person()
-            print(input_data[0])
             output_data = web_table_page.check_new_added_person()
             assert input_data in output_data
 
@@ -67,3 +66,31 @@ class TestElements:
             web_table_page.search_some_person(key_word)
             table_result = web_table_page.check_search_person()
             assert key_word in table_result, "the person was not found in the table"
+
+        def test_web_table_update_person_info(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open_site()
+            lastname = web_table_page.add_new_person()[1]
+            web_table_page.search_some_person(lastname)
+            age = web_table_page.update_person_info()
+            row = web_table_page.check_search_person()
+            assert age in row, "the person card has changed"
+
+        def test_web_table_delete_person(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open_site()
+            email = web_table_page.add_new_person()[3]
+            web_table_page.search_some_person(email)
+            web_table_page.delete_persone()
+            text = web_table_page.check_deleted()
+            assert text == "No rows found"
+
+        def test_web_table_change_count_row(self, driver):
+            web_table_page = WebTablePage(driver, 'https://demoqa.com/webtables')
+            web_table_page.open_site()
+            expected_rows_count = [5, 10, 20, 25, 50, 100]
+            actual_rows_count = web_table_page.select_up_to_some_rows()
+            assert actual_rows_count == expected_rows_count, (
+        f"Количество строк не соответствует ожидаемому. "
+        f"Ожидалось: {expected_rows_count}, Фактически: {actual_rows_count}"
+    )

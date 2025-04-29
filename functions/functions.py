@@ -1,11 +1,16 @@
 import time
 import random
+
+from functions.base_functions import BaseFunctions
+
 from generator.generator import generator_person
 from locators.locators import TextBoxPageLocators
 from locators.locators import CheckBoxPageLocators
 from locators.locators import RadioButtonLocators
 from locators.locators import WebTablePageLocators
-from functions.base_functions import BaseFunctions
+
+from selenium.webdriver.support.select import Select
+from selenium.webdriver.common.by import By
 
 
 
@@ -117,7 +122,8 @@ class WebTablePage(BaseFunctions):
         person_list = self.elements_are_present(self.locators.FULL_PEOPLE_LIST)
         data = []
         for item in person_list:
-            data.append(item.text.splitlines())
+            if ' ' not in item.text:
+                data.append(item.text.splitlines())
 
         return data
 
@@ -127,4 +133,34 @@ class WebTablePage(BaseFunctions):
     def check_search_person(self):
         delete_button = self.element_is_present(self.locators.DELETE_BUTTON)
         row = delete_button.find_element(*self.locators.ROW_BUTTON)
+
         return row.text.splitlines()
+
+    def update_person_info(self):
+        person_info = next(generator_person())
+        age = person_info.age
+        self.element_is_visible(self.locators.UPDATE_BUTTON).click()
+        self.element_is_visible(self.locators.AGE_INPUT).clear()
+        self.element_is_visible(self.locators.AGE_INPUT).send_keys(age)
+        self.element_is_visible(self.locators.SUBMIT).click()
+
+        return str(age)
+
+    def delete_persone(self):
+        self.element_is_visible(self.locators.DELETE_BUTTON).click()
+
+    def check_deleted(self):
+        return self.element_is_present(self.locators.NO_ROWS_FOUND).text
+
+    def select_up_to_some_rows(self):
+        count_rows = [5, 10, 20, 25, 50, 100]
+        actual_count_rows = []
+        dropdown = Select(self.element_is_clicable(self.locators.COUNT_ROW_LIST))
+        for option_value in count_rows:
+            dropdown.select_by_value(f'{str(option_value)}')
+            actual_count_rows.append(self.check_count_rows())
+
+        return actual_count_rows
+
+    def check_count_rows(self):
+        return len(self.elements_are_present(self.locators.FULL_PEOPLE_LIST))
