@@ -7,6 +7,7 @@ from functions.functions import RadioButtonPage
 from functions.functions import WebTablePage
 from functions.functions import ButtonsPage
 from functions.functions import LinksPage
+from functions.functions import UploadAndDownloadPage
 
 class TestElements:
     class TestTextBox:
@@ -162,3 +163,17 @@ class TestElements:
             links_page.open_site()
             response_code = links_page.check_not_found_link('https://demoqa.com/invalid-url')
             assert response_code == 404, 'Link works or status code is not 404'
+
+    class TestUploadAndDownload:
+
+        def test_upload_file(self, driver):
+            upload_page = UploadAndDownloadPage(driver, 'https://demoqa.com/upload-download')
+            upload_page.open_site()
+            file_name, result_text = upload_page.upload_file()
+            assert file_name == result_text, 'The file has not been uploaded'
+
+        def test_download_file(self, driver):
+            download_page = UploadAndDownloadPage(driver, 'https://demoqa.com/upload-download')
+            download_page.open_site()
+            check = download_page.download_file()
+            assert check is True, 'The file has not been downloaded'
