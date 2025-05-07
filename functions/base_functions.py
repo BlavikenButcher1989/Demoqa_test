@@ -1,5 +1,6 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as W
+from selenium.webdriver.common.action_chains import ActionChains
 
 
 class BaseFunctions:
@@ -47,3 +48,11 @@ class BaseFunctions:
     def scroll_up(self):
         self.driver.execute_script("window.scrollTo(0, -document.body.scrollHeight);")
 
+    def action_double_click(self, element):
+        action = ActionChains(self.driver)
+        action.double_click(element)
+        action.perform()
+    def action_right_click(self, element):
+        action = ActionChains(self.driver)
+        action.context_click(element)
+        action.perform()

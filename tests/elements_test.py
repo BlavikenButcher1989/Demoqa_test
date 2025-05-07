@@ -5,6 +5,7 @@ from functions.functions import TextBoxPage
 from functions.functions import CheckBoxPage
 from functions.functions import RadioButtonPage
 from functions.functions import WebTablePage
+from functions.functions import ButtonsPage
 
 class TestElements:
     class TestTextBox:
@@ -94,3 +95,16 @@ class TestElements:
         f"Количество строк не соответствует ожидаемому. "
         f"Ожидалось: {expected_rows_count}, Фактически: {actual_rows_count}"
     )
+
+    class TestButtonPage:
+
+        def test_different_click_on_the_buttons(self, driver):
+            button_page = ButtonsPage(driver, 'https://demoqa.com/buttons')
+            button_page.open_site()
+            time.sleep(0.1)
+            double = button_page.click_on_different_button('double')
+            right = button_page.click_on_different_button('right')
+            click = button_page.click_on_different_button('click')
+            assert double == 'You have done a double click', "The double click button was not pressed"
+            assert right == 'You have done a right click', "The right click button was not pressed"
+            assert click == 'You have done a dynamic click', "The dynamic click button was not pressed"

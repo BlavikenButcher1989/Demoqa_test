@@ -8,6 +8,7 @@ from locators.locators import TextBoxPageLocators
 from locators.locators import CheckBoxPageLocators
 from locators.locators import RadioButtonLocators
 from locators.locators import WebTablePageLocators
+from locators.locators import ButtonsPageLocators
 
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
@@ -157,10 +158,28 @@ class WebTablePage(BaseFunctions):
         actual_count_rows = []
         dropdown = Select(self.element_is_clicable(self.locators.COUNT_ROW_LIST))
         for option_value in count_rows:
-            dropdown.select_by_value(f'{str(option_value)}')
+            dropdown.select_by_value(f'{option_value}')
             actual_count_rows.append(self.check_count_rows())
 
         return actual_count_rows
 
     def check_count_rows(self):
         return len(self.elements_are_present(self.locators.FULL_PEOPLE_LIST))
+
+class ButtonsPage(BaseFunctions):
+
+    locators = ButtonsPageLocators()
+
+    def click_on_different_button(self, type_click):
+        if type_click == "double":
+            self.action_double_click(self.element_is_clicable(self.locators.DOUBLE_BUTTON))
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_DOUBLE)
+        if type_click == "right":
+            self.action_right_click(self.element_is_clicable(self.locators.RIGHT_CLICK_BUTTON))
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_RIGHT)
+        if type_click == "click":
+            self.element_is_clicable(self.locators.CLICK_ME_BUTTON).click()
+            return self.check_clicked_on_the_button(self.locators.SUCCESS_CLICK_ME)
+
+    def check_clicked_on_the_button(self, element):
+        return self.element_is_visible(element).text
