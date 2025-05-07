@@ -1,5 +1,6 @@
 import time
 import random
+import requests
 
 from functions.base_functions import BaseFunctions
 
@@ -9,6 +10,7 @@ from locators.locators import CheckBoxPageLocators
 from locators.locators import RadioButtonLocators
 from locators.locators import WebTablePageLocators
 from locators.locators import ButtonsPageLocators
+from locators.locators import LinksPageLocators
 
 from selenium.webdriver.support.select import Select
 from selenium.webdriver.common.by import By
@@ -167,19 +169,83 @@ class WebTablePage(BaseFunctions):
         return len(self.elements_are_present(self.locators.FULL_PEOPLE_LIST))
 
 class ButtonsPage(BaseFunctions):
-
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
         if type_click == "double":
-            self.action_double_click(self.element_is_clicable(self.locators.DOUBLE_BUTTON))
+            self.action_double_click(self.element_is_visible(self.locators.DOUBLE_BUTTON))
             return self.check_clicked_on_the_button(self.locators.SUCCESS_DOUBLE)
         if type_click == "right":
-            self.action_right_click(self.element_is_clicable(self.locators.RIGHT_CLICK_BUTTON))
+            self.action_right_click(self.element_is_visible(self.locators.RIGHT_CLICK_BUTTON))
             return self.check_clicked_on_the_button(self.locators.SUCCESS_RIGHT)
         if type_click == "click":
-            self.element_is_clicable(self.locators.CLICK_ME_BUTTON).click()
+            self.element_is_visible(self.locators.CLICK_ME_BUTTON).click()
             return self.check_clicked_on_the_button(self.locators.SUCCESS_CLICK_ME)
 
     def check_clicked_on_the_button(self, element):
         return self.element_is_visible(element).text
+
+class LinksPage(BaseFunctions):
+    locators = LinksPageLocators()
+
+    def check_home_link(self):
+        simple_link = self.element_is_visible(self.locators.HOME_LINK)
+        link_href = simple_link.get_attribute('href')
+        request = requests.get(link_href)
+        if request.status_code == 200:
+            simple_link.click()
+            self.switch_to_new_tab()
+            url = self.driver.current_url
+            return link_href, url
+        else:
+            return link_href, request.status_code
+
+    def check_created_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.CREATED_LINK).click()
+        else:
+            return request.status_code
+
+    def check_no_content_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.NO_CONTENT_LINK).click()
+        else:
+            return request.status_code
+
+    def check_moved_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.MOVED_LINK).click()
+        else:
+            return request.status_code
+
+
+    def check_bad_request_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.BAD_REQUEST_LINK).click()
+        else:
+            return request.status_code
+
+    def check_unauthorized_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.UNAUTHORIZED_LINK).click()
+        else:
+            return request.status_code
+
+    def check_forbidden_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.FORBIDDEN_LINK).click()
+        else:
+            return request.status_code
+
+    def check_not_found_link(self, url):
+        request = requests.get(url)
+        if request.status_code == 200:
+            self.element_is_present(self.locators.NOT_FOUND_LINK).click()
+        else:
+            return request.status_code
