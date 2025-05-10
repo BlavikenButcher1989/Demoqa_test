@@ -1,7 +1,7 @@
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait as W
 from selenium.webdriver.common.action_chains import ActionChains
-
+from selenium.common.exceptions import TimeoutException
 
 class BaseFunctions:
     def __init__(self, driver, url):
@@ -26,7 +26,7 @@ class BaseFunctions:
     def element_is_not_visible(self, locator):
         return W(self.driver, 10).until(EC.invisibility_of_element_located(locator))
 
-    def element_is_clicable(self, locator):
+    def element_is_clickable(self, locator):
         return W(self.driver, 10).until(EC.element_to_be_clickable(locator))
 
     def go_to_element(self, element):

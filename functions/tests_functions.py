@@ -4,6 +4,10 @@ import time
 import random
 import requests
 
+from selenium.common.exceptions import TimeoutException
+
+from selenium.webdriver.support.wait import WebDriverWait as W
+
 from functions.base_functions import BaseFunctions
 
 from generator.generator import generator_person, generated_file
@@ -15,6 +19,7 @@ from locators.locators import WebTablePageLocators
 from locators.locators import ButtonsPageLocators
 from locators.locators import LinksPageLocators
 from locators.locators import UploadAndDownloadPageLocators
+from locators.locators import DynamicPropertiesPageLocators
 
 from selenium.webdriver.support.select import Select
 
@@ -35,7 +40,7 @@ class TextBoxPage(BaseFunctions):
         self.element_is_visible(self.locators.EMAIL).send_keys(email)
         self.element_is_visible(self.locators.CURRENT_ADDRESS).send_keys(current_address)
         self.element_is_visible(self.locators.PERMANENT_ADDRESS).send_keys(permanent_address)
-        self.element_is_clicable(self.locators.SUBMIT).click()
+        self.element_is_clickable(self.locators.SUBMIT).click()
 
         return full_name, email, current_address, permanent_address
 
@@ -161,7 +166,7 @@ class WebTablePage(BaseFunctions):
     def select_up_to_some_rows(self):
         count_rows = [5, 10, 20, 25, 50, 100]
         actual_count_rows = []
-        dropdown = Select(self.element_is_clicable(self.locators.COUNT_ROW_LIST))
+        dropdown = Select(self.element_is_clickable(self.locators.COUNT_ROW_LIST))
         for option_value in count_rows:
             dropdown.select_by_value(f'{option_value}')
             actual_count_rows.append(self.check_count_rows())
@@ -274,4 +279,41 @@ class UploadAndDownloadPage(BaseFunctions):
             f.write(link_b[offset:])
             check_file = os.path.exists(path_name_file)
         os.remove(path_name_file)
+
         return check_file
+
+class DynamicPropertiesPage(BaseFunctions):
+
+    locators = DynamicPropertiesPageLocators()
+
+    def check_enable_button(self):
+        try:
+            self.element_is_clickable(self.locators.ENABLE_AFTER)
+            return True
+        except TimeoutException:
+            return False
+
+    def check_changed_color(self):
+        colored_button = self.element_is_present(self.locators.COLOR_CHANGE_BUTTON)
+        final_color_button = 'rgba(220, 53, 69, 1)'
+
+        def edit_color(color):
+            return color.lower().replace(" ", "")
+
+        actual_color_button = edit_color(final_color_button)
+
+        try:
+            W(self.driver, 6).until(lambda d: edit_color(colored_button.value_of_css_property('color')) == actual_color_button)
+        except TimeoutException:
+            raise AssertionError('Waiting takes longer than 5 seconds')
+
+        color_button_after = colored_button.value_of_css_property('color')
+
+        return color_button_after
+
+    def check_appear_of_button(self):
+        try:
+            self.element_is_present(self.locators.VISIBLE_AFTER_FIVE_SECOND_BUTTON)
+            return True
+        except TimeoutException:
+            return False
