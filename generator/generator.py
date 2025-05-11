@@ -62,3 +62,4 @@ def generator_month_and_year():
     year = random.randint(1900, 2025)
 
     return month, month_value, str(year)
+
