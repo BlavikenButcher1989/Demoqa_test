@@ -1,6 +1,5 @@
 import base64
 import os
-import time
 import random
 import requests
 
@@ -8,24 +7,24 @@ from selenium.common.exceptions import TimeoutException
 
 from selenium.webdriver.support.wait import WebDriverWait as W
 
-from functions.base_functions import BaseFunctions
+from pages.base_page import BasePage
 
 from generator.generator import generator_person, generated_file
 
-from locators.locators import TextBoxPageLocators
-from locators.locators import CheckBoxPageLocators
-from locators.locators import RadioButtonLocators
-from locators.locators import WebTablePageLocators
-from locators.locators import ButtonsPageLocators
-from locators.locators import LinksPageLocators
-from locators.locators import UploadAndDownloadPageLocators
-from locators.locators import DynamicPropertiesPageLocators
+from locators.elements_page_locators import TextBoxPageLocators
+from locators.elements_page_locators import CheckBoxPageLocators
+from locators.elements_page_locators import RadioButtonLocators
+from locators.elements_page_locators import WebTablePageLocators
+from locators.elements_page_locators import ButtonsPageLocators
+from locators.elements_page_locators import LinksPageLocators
+from locators.elements_page_locators import UploadAndDownloadPageLocators
+from locators.elements_page_locators import DynamicPropertiesPageLocators
 
 from selenium.webdriver.support.select import Select
 
 
 
-class TextBoxPage(BaseFunctions):
+class TextBoxPage(BasePage):
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
@@ -54,7 +53,7 @@ class TextBoxPage(BaseFunctions):
 
         return full_name, email, current_address, permanent_address
 
-class CheckBoxPage(BaseFunctions):
+class CheckBoxPage(BasePage):
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
@@ -91,7 +90,7 @@ class CheckBoxPage(BaseFunctions):
         return str(data).replace(' ','').lower()
 
 
-class RadioButtonPage(BaseFunctions):
+class RadioButtonPage(BasePage):
     locators = RadioButtonLocators()
 
     def click_on_the_radio_button(self, choice):
@@ -104,7 +103,7 @@ class RadioButtonPage(BaseFunctions):
     def get_output_result(self):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
 
-class WebTablePage(BaseFunctions):
+class WebTablePage(BasePage):
     locators = WebTablePageLocators()
 
     def add_new_person(self):
@@ -176,7 +175,7 @@ class WebTablePage(BaseFunctions):
     def check_count_rows(self):
         return len(self.elements_are_present(self.locators.FULL_PEOPLE_LIST))
 
-class ButtonsPage(BaseFunctions):
+class ButtonsPage(BasePage):
     locators = ButtonsPageLocators()
 
     def click_on_different_button(self, type_click):
@@ -193,7 +192,7 @@ class ButtonsPage(BaseFunctions):
     def check_clicked_on_the_button(self, element):
         return self.element_is_visible(element).text
 
-class LinksPage(BaseFunctions):
+class LinksPage(BasePage):
     locators = LinksPageLocators()
 
     def check_home_link(self):
@@ -258,7 +257,7 @@ class LinksPage(BaseFunctions):
         else:
             return request.status_code
 
-class UploadAndDownloadPage(BaseFunctions):
+class UploadAndDownloadPage(BasePage):
 
     locators = UploadAndDownloadPageLocators()
 
@@ -282,7 +281,7 @@ class UploadAndDownloadPage(BaseFunctions):
 
         return check_file
 
-class DynamicPropertiesPage(BaseFunctions):
+class DynamicPropertiesPage(BasePage):
 
     locators = DynamicPropertiesPageLocators()
 

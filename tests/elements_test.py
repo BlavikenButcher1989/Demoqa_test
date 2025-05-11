@@ -1,14 +1,14 @@
 import random
 import time
 
-from functions.tests_functions import TextBoxPage
-from functions.tests_functions import CheckBoxPage
-from functions.tests_functions import RadioButtonPage
-from functions.tests_functions import WebTablePage
-from functions.tests_functions import ButtonsPage
-from functions.tests_functions import LinksPage
-from functions.tests_functions import UploadAndDownloadPage
-from functions.tests_functions import DynamicPropertiesPage
+from pages.elements_page import TextBoxPage
+from pages.elements_page import CheckBoxPage
+from pages.elements_page import RadioButtonPage
+from pages.elements_page import WebTablePage
+from pages.elements_page import ButtonsPage
+from pages.elements_page import LinksPage
+from pages.elements_page import UploadAndDownloadPage
+from pages.elements_page import DynamicPropertiesPage
 
 class TestElements:
     class TestTextBox:
@@ -171,6 +171,7 @@ class TestElements:
             upload_page = UploadAndDownloadPage(driver, 'https://demoqa.com/upload-download')
             upload_page.open_site()
             file_name, result_text = upload_page.upload_file()
+            time.sleep(3)
             assert file_name == result_text, 'The file has not been uploaded'
 
         def test_download_file(self, driver):
