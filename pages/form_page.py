@@ -9,6 +9,10 @@ from locators.form_page_locators import FormPageLocators
 from generator.generator import generator_person, generated_file, generator_subjects, generator_cities, generator_month_and_year
 
 class FormPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = FormPageLocators()
 
     def fill_form_fields(self):
