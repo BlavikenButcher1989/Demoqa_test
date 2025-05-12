@@ -9,6 +9,8 @@ from pages.base_page import BasePage
 from generator.generator import generator_person
 from locators.alert_frames_windows_locators import BrowserWindowsPageLocators
 from locators.alert_frames_windows_locators import AlertsPageLocators
+from locators.alert_frames_windows_locators import FramesPageLocators
+from locators.alert_frames_windows_locators import NestedFramePageLocators
 
 class BrowserWindowPage(BasePage):
 
@@ -72,3 +74,41 @@ class AlertsPage(BasePage):
         input_result = self.element_is_present(self.locators.PROMPT_BOX_RESULT).text
 
         return name, alert_text, input_result.split()[2]
+
+class FramesPage(BasePage):
+
+    locators = FramesPageLocators()
+
+    def check_frame(self, frame):
+        if frame == 'frame_1':
+            frame_1 = self.element_is_present(self.locators.FIRST_FRAME)
+            width_1 = frame_1.get_attribute('width')
+            height_1 = frame_1.get_attribute('height')
+            self.switch_to_frame(frame_1)
+            frame_title = self.element_is_present(self.locators.FRAME_TITLE).text
+            self.driver.switch_to.default_content()
+
+            return [width_1, height_1, frame_title]
+
+        if frame == 'frame_2':
+            frame_2 = self.element_is_present(self.locators.SECOND_FRAME)
+            width_2 = frame_2.get_attribute('width')
+            height_2 = frame_2.get_attribute('height')
+            self.switch_to_frame(frame_2)
+            frame_title = self.element_is_present(self.locators.FRAME_TITLE).text
+
+            return [width_2, height_2, frame_title]
+
+class NestedFramePage(BasePage):
+
+    locators = NestedFramePageLocators()
+
+    def check_nested_frame(self):
+        parent_frame = self.element_is_present(self.locators.PARENT_FRAME)
+        self.switch_to_frame(parent_frame)
+        parent_text = self.element_is_present(self.locators.PARENT_TEXT).text
+        child_frame = self.element_is_present(self.locators.CHILD_FRAME)
+        self.switch_to_frame(child_frame)
+        child_text = self.element_is_present(self.locators.CHILD_TEXT).text
+
+        return parent_text, child_text

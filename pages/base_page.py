@@ -59,3 +59,6 @@ class BasePage:
 
     def switch_to_new_tab(self):
         self.driver.switch_to.window(self.driver.window_handles[1])
+
+    def switch_to_frame(self, locator):
+        self.driver.switch_to.frame(locator)
