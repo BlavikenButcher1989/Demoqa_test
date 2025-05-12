@@ -25,6 +25,10 @@ from selenium.webdriver.support.select import Select
 
 
 class TextBoxPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = TextBoxPageLocators()
 
     def fill_all_fields(self):
@@ -54,6 +58,10 @@ class TextBoxPage(BasePage):
         return full_name, email, current_address, permanent_address
 
 class CheckBoxPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = CheckBoxPageLocators()
 
     def open_full_list(self):
@@ -91,6 +99,10 @@ class CheckBoxPage(BasePage):
 
 
 class RadioButtonPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = RadioButtonLocators()
 
     def click_on_the_radio_button(self, choice):
@@ -104,6 +116,10 @@ class RadioButtonPage(BasePage):
         return self.element_is_present(self.locators.OUTPUT_RESULT).text
 
 class WebTablePage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = WebTablePageLocators()
 
     def add_new_person(self):
@@ -193,6 +209,10 @@ class ButtonsPage(BasePage):
         return self.element_is_visible(element).text
 
 class LinksPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = LinksPageLocators()
 
     def check_home_link(self):
@@ -259,6 +279,9 @@ class LinksPage(BasePage):
 
 class UploadAndDownloadPage(BasePage):
 
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
     locators = UploadAndDownloadPageLocators()
 
     def upload_file(self):
@@ -282,6 +305,9 @@ class UploadAndDownloadPage(BasePage):
         return check_file
 
 class DynamicPropertiesPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
 
     locators = DynamicPropertiesPageLocators()
 
