@@ -2,6 +2,7 @@ from pages.alert_frames_windows_page import BrowserWindowPage
 from pages.alert_frames_windows_page import AlertsPage
 from pages.alert_frames_windows_page import FramesPage
 from pages.alert_frames_windows_page import NestedFramePage
+from pages.alert_frames_windows_page import ModalDialogsPage
 
 class TestAlertsFramesWindows:
 
@@ -65,3 +66,19 @@ class TestAlertsFramesWindows:
             parent_text, child_text = nested_frame_page.check_nested_frame()
             assert parent_text == 'Parent frame', 'Nested frame does not exist'
             assert child_text == 'Child Iframe', 'Nested frame does not exist'
+
+    class TestModalDialogsPage:
+
+        def test_small_modal(self, driver):
+            modal_dialogs_page = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialogs_page.open_site()
+            small_title, small_modal_text = modal_dialogs_page.check_small_modal()
+            assert small_title == 'Small Modal', 'Title is not Small Modal'
+            assert small_modal_text == 'This is a small modal. It has very less content', 'Dialog text does not match'
+
+        def test_large_modal(self, driver):
+            modal_dialogs_page = ModalDialogsPage(driver, 'https://demoqa.com/modal-dialogs')
+            modal_dialogs_page.open_site()
+            large_title, large_modal_text = modal_dialogs_page.check_large_modal()
+            assert large_title == 'Large Modal', 'Title is not Large Modal'
+            assert 'Lorem Ipsum is simply dummy text' in large_modal_text, 'Dialog text does not match'

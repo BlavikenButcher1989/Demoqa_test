@@ -1,6 +1,5 @@
 import random
 
-
 from selenium.webdriver.support.wait import WebDriverWait as W
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.alert import Alert
@@ -11,8 +10,13 @@ from locators.alert_frames_windows_locators import BrowserWindowsPageLocators
 from locators.alert_frames_windows_locators import AlertsPageLocators
 from locators.alert_frames_windows_locators import FramesPageLocators
 from locators.alert_frames_windows_locators import NestedFramePageLocators
+from locators.alert_frames_windows_locators import ModalDialogsPageLocators
+
 
 class BrowserWindowPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
 
     locators = BrowserWindowsPageLocators()
 
@@ -31,7 +35,11 @@ class BrowserWindowPage(BasePage):
 
         return result_text
 
+
 class AlertsPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
 
     locators = AlertsPageLocators()
 
@@ -54,14 +62,13 @@ class AlertsPage(BasePage):
         self.element_is_visible(self.locators.CONFIRM_BOX_ALERT_BUTTON).click()
         alert = Alert(self.driver)
         alert_text = alert.text
-        if random.randint(1 ,2) == 1:
+        if random.randint(1, 2) == 1:
             alert.accept()
         else:
             alert.dismiss()
         result_text = self.element_is_present(self.locators.CONFIRM_BOX_RESULT).text
 
         return alert_text, result_text
-
 
     def check_prompt_box_alert(self):
         person = next(generator_person())
@@ -75,7 +82,11 @@ class AlertsPage(BasePage):
 
         return name, alert_text, input_result.split()[2]
 
+
 class FramesPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
 
     locators = FramesPageLocators()
 
@@ -99,7 +110,11 @@ class FramesPage(BasePage):
 
             return [width_2, height_2, frame_title]
 
+
 class NestedFramePage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
 
     locators = NestedFramePageLocators()
 
@@ -112,3 +127,27 @@ class NestedFramePage(BasePage):
         child_text = self.element_is_present(self.locators.CHILD_TEXT).text
 
         return parent_text, child_text
+
+
+class ModalDialogsPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = ModalDialogsPageLocators()
+
+    def check_small_modal(self):
+        self.element_is_visible(self.locators.SMALL_MODAL_BUTTON).click()
+        small_modal_text = self.element_is_visible(self.locators.SMALL_MODAL_TEXT).text
+        small_title = self.element_is_visible(self.locators.SMALL_MODAL_TITLE).text
+        self.element_is_visible(self.locators.SMALL_MODAL_CLOSE_BUTTON).click()
+
+        return small_title, small_modal_text
+
+    def check_large_modal(self):
+        self.element_is_visible(self.locators.LARGE_MODAL_BUTTON).click()
+        large_modal_text = self.element_is_visible(self.locators.LARGE_MODAL_TEXT).text
+        large_title = self.element_is_visible(self.locators.LARGE_MODAL_TITLE).text
+        self.element_is_visible(self.locators.LARGE_MODAL_CLOSE_BUTTON).click()
+
+        return large_title, large_modal_text
