@@ -13,3 +13,6 @@ class Person:
     current_address: str
     permanent_address: str
     mobile: str
+
+
+color_list = ["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
