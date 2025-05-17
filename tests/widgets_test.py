@@ -1,5 +1,8 @@
 from pages.widgets_page import WidgetsPage
 from pages.widgets_page import AutoCompletePage
+from pages.widgets_page import DatePickerPage
+from pages.widgets_page import SliderPage
+from pages.widgets_page import ProgressBarPage
 
 
 class TestWidgetsPage:
@@ -30,3 +33,34 @@ class TestWidgetsPage:
             auto_complete.open_site()
             color, chosen_color = auto_complete.check_fill_input_single()
             assert color == chosen_color, 'Color was not added'
+
+    class TestDatePickerPage:
+
+        def test_date_input(self, driver):
+            date_input = DatePickerPage(driver, 'https://demoqa.com/date-picker')
+            date_input.open_site()
+            value_date_before, value_date_after = date_input.check_select_date()
+            assert value_date_before != value_date_after, 'Data has not been changed'
+
+        def test_date_and_time_input(self, driver):
+            date_and_time_input = DatePickerPage(driver, 'https://demoqa.com/date-picker')
+            date_and_time_input.open_site()
+            value_date_before, value_date_after = date_and_time_input.check_select_date_and_time()
+            assert value_date_before != value_date_after, 'Data and time has not been changed'
+
+
+    class TestSliderPage:
+
+        def test_slider(self, driver):
+            slider_page = SliderPage(driver, 'https://demoqa.com/slider')
+            slider_page.open_site()
+            value_before, value_after = slider_page.check_change_slider_value()
+            assert value_before != value_after
+
+    class TestProgressBarPage:
+
+        def test_progress_bar(self, driver):
+            progress_bar = ProgressBarPage(driver, 'https://demoqa.com/progress-bar')
+            progress_bar.open_site()
+            value_before, value_after = progress_bar.check_change_progress_bar_value()
+            assert value_before != value_after, 'Progress bar value has not been changed'

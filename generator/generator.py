@@ -1,10 +1,11 @@
 import random
 
-from data.data import Person
-from data.data import Color
+from data.data import Person, Date
+
 from faker import Faker
 
 faker_ru = Faker('ru_Ru')
+faker_en = Faker('En')
 
 
 def generator_person():
@@ -71,3 +72,11 @@ def generator_month_and_year():
     year = random.randint(1900, 2025)
 
     return month, month_value, str(year)
+
+def generator_date():
+    yield Date(
+        year=faker_en.year(),
+        month=faker_en.month_name(),
+        day=faker_en.day_of_month(),
+        time='12:00'
+    )

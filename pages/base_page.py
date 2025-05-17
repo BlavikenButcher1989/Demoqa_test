@@ -58,3 +58,8 @@ class BasePage:
 
     def switch_to_new_tab(self):
         self.driver.switch_to.window(self.driver.window_handles[1])
+
+    def slide_drag_and_drop(self, element, x_coord, y_coord):
+        action = ActionChains(self.driver)
+        action.drag_and_drop_by_offset(element, x_coord, y_coord)
+        action.perform()

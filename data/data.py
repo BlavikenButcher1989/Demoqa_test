@@ -16,3 +16,11 @@ class Person:
 
 
 color_list = ["Red", "Blue", "Green", "Yellow", "Purple", "Black", "White", "Voilet", "Indigo", "Magenta", "Aqua"]
+
+@dataclass
+class Date:
+
+    day: str
+    month: str
+    year: str
+    time: str

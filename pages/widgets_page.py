@@ -3,15 +3,18 @@ import time
 
 from data.data import color_list
 
-from selenium.webdriver.support.wait import WebDriverWait as W
-from selenium.webdriver.support import expected_conditions as EC
-
-from selenium.common import TimeoutException
 from selenium.webdriver import Keys, ActionChains
+from selenium.webdriver.support.select import Select
 
 from locators.widgets_locators import WidgetsPageLocators
 from locators.widgets_locators import AutoCompletePageLocators
+from locators.widgets_locators import DatePickerPageLocators
+from locators.widgets_locators import SliderPageLocators
+from locators.widgets_locators import ProgressBarLocators
+
 from pages.base_page import BasePage
+
+from generator.generator import generator_date
 
 
 class WidgetsPage(BasePage):
@@ -79,3 +82,83 @@ class AutoCompletePage(BasePage):
         chosen_color = self.element_is_present(self.locators.SINGLE_VALUE).text
 
         return color, chosen_color
+
+class DatePickerPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = DatePickerPageLocators()
+
+    def check_select_date(self):
+        date = next(generator_date())
+        input_date = self.element_is_visible(self.locators.DATE_INPUT)
+        value_date_before = input_date.get_attribute('value')
+        input_date.click()
+        self.set_date_by_text(self.locators.DATE_SELECT_MONTH, date.month)
+        self.set_date_by_text(self.locators.DATE_SELECT_YEAR, date.year)
+        self.set_date_from_list(self.locators.DATE_SELECT_DAY_LIST, date.day)
+        value_date_after = input_date.get_attribute('value')
+
+        return value_date_before, value_date_after
+
+    def check_select_date_and_time(self):
+        date = next(generator_date())
+        input_date_and_time = self.element_is_visible(self.locators.DATE_AND_TIME_INPUT)
+        value_date_before = input_date_and_time.get_attribute('value')
+        input_date_and_time.click()
+        self.element_is_clickable(self.locators.DATE_AND_TIME_SELECT_MONTH).click()
+        self.set_date_from_list(self.locators.DATE_AND_TIME_MONTHS_LIST, date.month)
+        self.element_is_clickable(self.locators.DATE_AND_TIME_SELECT_YEAR).click()
+        self.set_date_from_list(self.locators.DATE_AND_TIME_YEAR_LIST, '2020')
+        self.set_date_from_list(self.locators.DATE_SELECT_DAY_LIST, date.day)
+        time_list = self.elements_are_present(self.locators.DATE_AND_TIME_TIME_LIST)
+        time_ = random.choice(time_list)
+        time_.click()
+        value_date_after = input_date_and_time.get_attribute('value')
+
+        return value_date_before, value_date_after
+
+    def set_date_by_text(self, element, value):
+        select = Select(self.element_is_present(element))
+        select.select_by_visible_text(value)
+
+    def set_date_from_list(self, elements, value):
+        item_list = self.elements_are_visible(elements)
+        for item in item_list:
+            if item.text == value:
+                item.click()
+                break
+
+class SliderPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = SliderPageLocators()
+
+    def check_change_slider_value(self):
+        value_before = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+        slider_input = self.element_is_visible(self.locators.INPUT_SLIDER)
+        time.sleep(0.1)
+        self.slide_drag_and_drop(slider_input, random.randint(1, 100), 0)
+        value_after = self.element_is_visible(self.locators.SLIDER_VALUE).get_attribute('value')
+
+        return value_before, value_after
+
+class ProgressBarPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = ProgressBarLocators()
+
+    def check_change_progress_bar_value(self):
+        value_before = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).text
+        progress_bar_button = self.element_is_visible(self.locators.PROGRESS_BAR_BUTTON)
+        progress_bar_button.click()
+        time.sleep(random.randint(2, 5))
+        progress_bar_button.click()
+        value_after = self.element_is_visible(self.locators.PROGRESS_BAR_VALUE).text
+
+        return value_before, value_after
