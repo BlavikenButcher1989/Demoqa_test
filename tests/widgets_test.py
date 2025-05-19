@@ -3,6 +3,7 @@ from pages.widgets_page import AutoCompletePage
 from pages.widgets_page import DatePickerPage
 from pages.widgets_page import SliderPage
 from pages.widgets_page import ProgressBarPage
+from pages.widgets_page import TabsPage
 
 
 class TestWidgetsPage:
@@ -64,3 +65,16 @@ class TestWidgetsPage:
             progress_bar.open_site()
             value_before, value_after = progress_bar.check_change_progress_bar_value()
             assert value_before != value_after, 'Progress bar value has not been changed'
+
+
+    class TestTabsPage:
+
+        def test_tabs(self, driver):
+            tabs = TabsPage(driver, 'https://demoqa.com/tabs')
+            tabs.open_site()
+            tab_what_title, tab_what_content = tabs.check_tabs('what')
+            tab_origin_title, tab_origin_content = tabs.check_tabs('origin')
+            tab_use_title, tab_use_content = tabs.check_tabs('use')
+            assert tab_what_title == 'What' and tab_what_content > 0, 'Tab "What" was not pressed or text was missed'
+            assert tab_origin_title == 'Origin' and tab_origin_content > 0, 'Tab "Origin" was not pressed or text was missed'
+            assert tab_use_title == 'Use' and tab_use_content > 0, 'Tab "Use" was not pressed or text was missed'

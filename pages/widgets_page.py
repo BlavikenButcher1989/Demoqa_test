@@ -10,7 +10,8 @@ from locators.widgets_locators import WidgetsPageLocators
 from locators.widgets_locators import AutoCompletePageLocators
 from locators.widgets_locators import DatePickerPageLocators
 from locators.widgets_locators import SliderPageLocators
-from locators.widgets_locators import ProgressBarLocators
+from locators.widgets_locators import ProgressBarPageLocators
+from locators.widgets_locators import TabsPageLocators
 
 from pages.base_page import BasePage
 
@@ -151,7 +152,7 @@ class ProgressBarPage(BasePage):
     def __init__(self, driver, url):
         super().__init__(driver, url)
 
-    locators = ProgressBarLocators()
+    locators = ProgressBarPageLocators()
 
     def check_change_progress_bar_value(self):
         value_before = self.element_is_present(self.locators.PROGRESS_BAR_VALUE).text
@@ -162,3 +163,35 @@ class ProgressBarPage(BasePage):
         value_after = self.element_is_visible(self.locators.PROGRESS_BAR_VALUE).text
 
         return value_before, value_after
+
+class TabsPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = TabsPageLocators()
+
+    def check_tabs(self, name):
+
+        names = {
+            'what': {
+                'title': self.locators.TAB_WHAT,
+                'text': self.locators.TAB_WHAT_TEXT
+            },
+            'origin': {
+                'title': self.locators.TAB_ORIGIN,
+                'text': self.locators.TAB_ORIGIN_TEXT
+            },
+            'use': {
+                'title': self.locators.TAB_USE,
+                'text': self.locators.TAB_USE_TEXT
+            }
+        }
+
+        tab_title = self.element_is_visible(names[name]['title'])
+        tab_title.click()
+        tab_text = self.element_is_visible(names[name]['text']).text
+
+
+
+        return tab_title.text, len(tab_text)
