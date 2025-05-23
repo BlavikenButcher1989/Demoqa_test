@@ -1,9 +1,13 @@
+from data.data import menu_item_list
+
 from pages.widgets_page import WidgetsPage
 from pages.widgets_page import AutoCompletePage
 from pages.widgets_page import DatePickerPage
 from pages.widgets_page import SliderPage
 from pages.widgets_page import ProgressBarPage
 from pages.widgets_page import TabsPage
+from pages.widgets_page import ToolTipsPage
+from pages.widgets_page import MenuPage
 
 
 class TestWidgetsPage:
@@ -78,3 +82,24 @@ class TestWidgetsPage:
             assert tab_what_title == 'What' and tab_what_content > 0, 'Tab "What" was not pressed or text was missed'
             assert tab_origin_title == 'Origin' and tab_origin_content > 0, 'Tab "Origin" was not pressed or text was missed'
             assert tab_use_title == 'Use' and tab_use_content > 0, 'Tab "Use" was not pressed or text was missed'
+
+
+    class TestToolTipsPage:
+
+        def test_tool_tips(self, driver):
+            toll_tips = ToolTipsPage(driver, 'https://demoqa.com/tool-tips')
+            toll_tips.open_site()
+            text_button, text_field, text_contrary, text_section = toll_tips.check_tool_tips()
+            assert text_button == 'You hovered over the Button'
+            assert text_field == 'You hovered over the text field'
+            assert text_contrary == 'You hovered over the Contrary'
+            assert text_section == 'You hovered over the 1.10.32'
+
+
+    class TestMenuPage:
+
+        def test_menu(self, driver):
+            menu_page = MenuPage(driver, 'https://demoqa.com/menu#')
+            menu_page.open_site()
+            data = menu_page.check_menu()
+            assert data == menu_item_list, 'Menu items do not exist or have not been selected'

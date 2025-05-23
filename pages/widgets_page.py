@@ -12,6 +12,8 @@ from locators.widgets_locators import DatePickerPageLocators
 from locators.widgets_locators import SliderPageLocators
 from locators.widgets_locators import ProgressBarPageLocators
 from locators.widgets_locators import TabsPageLocators
+from locators.widgets_locators import ToolTipsPageLocators
+from locators.widgets_locators import MenuPageLocators
 
 from pages.base_page import BasePage
 
@@ -192,6 +194,46 @@ class TabsPage(BasePage):
         tab_title.click()
         tab_text = self.element_is_visible(names[name]['text']).text
 
-
-
         return tab_title.text, len(tab_text)
+
+class ToolTipsPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = ToolTipsPageLocators()
+
+    def get_text_from_tool_tips(self, hover_elem, wait_elem):
+        time.sleep(0.1)
+        element = self.element_is_visible(hover_elem)
+        self.action_move_to_element(element)
+        time.sleep(0.3)
+        self.element_is_visible(wait_elem)
+        tool_tip_text = self.element_is_visible(self.locators.TOOL_TIPS_INNERS)
+        text = tool_tip_text.text
+
+        return text
+
+    def check_tool_tips(self):
+        tool_tip_text_button = self.get_text_from_tool_tips(self.locators.BUTTON, self.locators.TOOL_TIP_BUTTON)
+        tool_tip_text_field = self.get_text_from_tool_tips(self.locators.FIELD, self.locators.TOOL_TIP_FIELD)
+        tool_tip_text_contrary = self.get_text_from_tool_tips(self.locators.LINK_CONTRARY, self.locators.TOOL_TIP_CONTRARY)
+        tool_tip_text_section = self.get_text_from_tool_tips(self.locators.LINK_SECTION, self.locators.TOOL_TIP_SECTION)
+
+        return tool_tip_text_button, tool_tip_text_field, tool_tip_text_contrary, tool_tip_text_section
+
+class MenuPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = MenuPageLocators()
+
+    def check_menu(self):
+        menu_itm_list = self.elements_are_present(self.locators.MAIN_ITEM_LIST)
+        data = []
+        for item in menu_itm_list:
+            self.action_move_to_element(item)
+            data.append(item.text)
+
+        return data

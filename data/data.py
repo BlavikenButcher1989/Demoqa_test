@@ -24,3 +24,5 @@ class Date:
     month: str
     year: str
     time: str
+
+menu_item_list = ['Main Item 1', 'Main Item 2', 'Sub Item', 'Sub Item', 'SUB SUB LIST »', 'Sub Sub Item 1', 'Sub Sub Item 2', 'Main Item 3']

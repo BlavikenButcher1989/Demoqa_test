@@ -46,6 +46,7 @@ class ProgressBarPageLocators:
     PROGRESS_BAR_VALUE = (By.CSS_SELECTOR, 'div[class="progress-bar bg-info"]')
 
 class TabsPageLocators:
+
     TAB_WHAT = (By.CSS_SELECTOR, 'a[id="demo-tab-what"]')
     TAB_WHAT_TEXT = (By.CSS_SELECTOR, 'div[id="demo-tabpane-what"] p')
 
@@ -54,3 +55,23 @@ class TabsPageLocators:
 
     TAB_USE = (By.CSS_SELECTOR, 'a[id="demo-tab-use"]')
     TAB_USE_TEXT = (By.CSS_SELECTOR, 'div[id="demo-tabpane-use"] p')
+
+class ToolTipsPageLocators:
+
+    BUTTON = (By.CSS_SELECTOR, 'button[id="toolTipButton"]')
+    TOOL_TIP_BUTTON = (By.CSS_SELECTOR, 'button[aria-describedby="buttonToolTip"]')
+
+    FIELD = (By.CSS_SELECTOR, 'input[id="toolTipTextField"]')
+    TOOL_TIP_FIELD = (By.CSS_SELECTOR, 'input[aria-describedby="textFieldToolTip"]')
+
+    LINK_CONTRARY = (By.XPATH, "//a[contains(text(), 'Contrary')]")
+    TOOL_TIP_CONTRARY = (By.CSS_SELECTOR, 'a[aria-describedby="contraryTexToolTip"]')
+
+    LINK_SECTION = (By.XPATH, "//a[contains(text(), '1.10.32')]")
+    TOOL_TIP_SECTION = (By.CSS_SELECTOR, 'a[aria-describedby="sectionToolTip"]')
+
+    TOOL_TIPS_INNERS = (By.CSS_SELECTOR, 'div[class="tooltip-inner"]')
+
+class MenuPageLocators:
+
+    MAIN_ITEM_LIST = (By.CSS_SELECTOR, 'ul[id="nav"] li a')
