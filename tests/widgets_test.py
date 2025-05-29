@@ -8,6 +8,7 @@ from pages.widgets_page import ProgressBarPage
 from pages.widgets_page import TabsPage
 from pages.widgets_page import ToolTipsPage
 from pages.widgets_page import MenuPage
+from pages.widgets_page import SelectMenuPage
 
 
 class TestWidgetsPage:
@@ -103,3 +104,35 @@ class TestWidgetsPage:
             menu_page.open_site()
             data = menu_page.check_menu()
             assert data == menu_item_list, 'Menu items do not exist or have not been selected'
+
+    class TestSelectMenuPage:
+
+        def test_select_option(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open_site()
+            select_option_text_before, select_option_text_after = select_menu_page.check_select_option()
+            assert select_option_text_before != select_option_text_after, 'Option have not been chosen'
+
+        def test_select_title(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open_site()
+            select_title_text_before, select_title_text_after = select_menu_page.check_select_title()
+            assert select_title_text_before != select_title_text_after, 'Title have not been chosen'
+
+        def test_old_select(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open_site()
+            colors, text = select_menu_page.check_old_select()
+            assert text in colors, 'Color have not been chosen'
+
+        def test_multiselect(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open_site()
+            colors, multiselect_colors = select_menu_page.check_multiselect()
+            assert colors == multiselect_colors, 'Colors have not been chosen'
+
+        def test_standard_select(self, driver):
+            select_menu_page = SelectMenuPage(driver, 'https://demoqa.com/select-menu')
+            select_menu_page.open_site()
+            cars, text = select_menu_page.check_standard_select()
+            assert text in cars, 'Car have not been chosen'

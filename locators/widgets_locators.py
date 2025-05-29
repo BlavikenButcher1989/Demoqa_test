@@ -75,3 +75,20 @@ class ToolTipsPageLocators:
 class MenuPageLocators:
 
     MAIN_ITEM_LIST = (By.CSS_SELECTOR, 'ul[id="nav"] li a')
+
+class SelectMenuPageLocators:
+
+    SELECT_OPTION = (By.CSS_SELECTOR, 'input[id="react-select-2-input"]')
+    SELECT_OPTION_TEXT_BEFORE_SELECT = (By.CSS_SELECTOR, 'div[class=" css-1wa3eu0-placeholder"]')
+    SELECT_OPTION_TEXT_AFTER_SELECT = (By.CSS_SELECTOR, 'div[class=" css-1uccc91-singleValue"]')
+
+    SELECT_TITLE = (By.CSS_SELECTOR, 'input[id="react-select-3-input"]')
+    SELECT_TITLE_TEXT_BEFORE_SELECT = (By.CSS_SELECTOR, 'div[class=" css-1wa3eu0-placeholder"]')
+    SELECT_TITLE_TEXT_AFTER_SELECT = (By.CSS_SELECTOR, 'div[class=" css-1uccc91-singleValue"]')
+
+    OLD_SELECT = (By.CSS_SELECTOR, 'select[id="oldSelectMenu"]')
+
+    MULTISELECT = (By.CSS_SELECTOR, 'input[id="react-select-4-input"]')
+    MULTISELECT_TEXT = (By.CSS_SELECTOR, 'div[class="css-12jo7m5"]')
+
+    STANDARD_SELECT = (By.CSS_SELECTOR, 'select[id="cars"]')

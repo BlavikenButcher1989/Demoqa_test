@@ -1,7 +1,7 @@
 import random
 import time
 
-from data.data import color_list
+from data.data import color_list, options_to_select, titles_to_select, old_select_menu, standard_select_menu, drop_dawn_to_select
 
 from selenium.webdriver import Keys, ActionChains
 from selenium.webdriver.support.select import Select
@@ -14,6 +14,7 @@ from locators.widgets_locators import ProgressBarPageLocators
 from locators.widgets_locators import TabsPageLocators
 from locators.widgets_locators import ToolTipsPageLocators
 from locators.widgets_locators import MenuPageLocators
+from locators.widgets_locators import SelectMenuPageLocators
 
 from pages.base_page import BasePage
 
@@ -237,3 +238,73 @@ class MenuPage(BasePage):
             data.append(item.text)
 
         return data
+
+class SelectMenuPage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = SelectMenuPageLocators()
+
+    def check_select_option(self):
+        select_option_text_before = self.get_text(self.locators.SELECT_OPTION_TEXT_BEFORE_SELECT, 0)
+        select_option = self.locators.SELECT_OPTION
+        self.random_choice(select_option, options_to_select)
+        select_option_text_after = self.get_text(self.locators.SELECT_OPTION_TEXT_AFTER_SELECT, 0)
+
+        return select_option_text_before, select_option_text_after
+
+    def check_select_title(self):
+        select_title_text_before = self.get_text(self.locators.SELECT_TITLE_TEXT_BEFORE_SELECT, 1)
+        select_title = self.locators.SELECT_TITLE
+        self.random_choice(select_title, titles_to_select)
+        select_title_text_after = self.get_text(self.locators.SELECT_TITLE_TEXT_AFTER_SELECT, 0)
+
+        return select_title_text_before, select_title_text_after
+
+    def check_old_select(self):
+        old_select = self.locators.OLD_SELECT
+        colors, text = self.select_func(old_select, old_select_menu)
+
+        return colors, text
+
+    def check_multiselect(self):
+        multiselect = self.locators.MULTISELECT
+        colors = self.multiselect_func(multiselect, drop_dawn_to_select)
+        multiselect_text_list = self.elements_are_visible(self.locators.MULTISELECT_TEXT)
+        multiselect_colors = [text.text for text in multiselect_text_list]
+
+        return colors, multiselect_colors
+
+    def check_standard_select(self):
+        standard_select = self.locators.STANDARD_SELECT
+        cars, text = self.select_func(standard_select, standard_select_menu)
+
+        return cars, text
+
+    def random_choice(self, locator, data):
+        element = self.element_is_visible(locator)
+        element.send_keys(random.choice(data))
+        element.send_keys(Keys.ENTER)
+
+    def select_func(self, locator, data):
+        element = Select(self.element_is_visible(locator))
+        options = [opt.text for opt in element.options]
+        text = random.choice(data)
+        element.select_by_visible_text(text)
+
+        return options, text
+
+    def multiselect_func(self, locator, items_list):
+        element = self.element_is_visible(locator)
+        colors = random.sample(items_list, random.randint(1,4))
+        for color in colors:
+            element.send_keys(color)
+            element.send_keys(Keys.ENTER)
+
+        return [color.capitalize() for color in colors]
+
+    def get_text(self, locator, ind):
+        text = self.elements_are_visible(locator)
+
+        return text[ind].text
