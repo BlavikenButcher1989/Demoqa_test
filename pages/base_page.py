@@ -34,3 +34,8 @@ class BasePage:
         action = ActionChains(self.driver)
         action.move_to_element(element)
         action.perform()
+
+    def drag_and_drop_elements(self, drag, drop):
+        action = ActionChains(self.driver)
+        action.drag_and_drop(drag, drop)
+        action.perform()
