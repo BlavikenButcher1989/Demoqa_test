@@ -1,5 +1,6 @@
 from pages.interations_page import SortablePage
 from pages.interations_page import SelectablePage
+from pages.interations_page import ResizablePage
 
 
 class TestSortablePage:
@@ -29,3 +30,18 @@ class TestSelectablePage:
         selectable_page.open_site()
         count_item, item_grid_active = selectable_page.change_grid_order()
         assert count_item == item_grid_active, 'elements were not selected'
+
+class TestResizablePage:
+
+    def test_resizable_box(self, driver):
+        resizable_page = ResizablePage(driver, 'https://demoqa.com/resizable')
+        resizable_page.open_site()
+        max_size, min_size = resizable_page.change_size_resizable_box()
+        assert max_size == '500, 300'
+        assert min_size == '150, 150'
+
+    def test_resizable(self, driver):
+        resizable_page = ResizablePage(driver, 'https://demoqa.com/resizable')
+        resizable_page.open_site()
+        max_size, min_size = resizable_page.change_size_resizable()
+        assert max_size != min_size
