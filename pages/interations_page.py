@@ -5,6 +5,7 @@ from pages.base_page import BasePage
 from locators.interactions_locators import SortablePageLocators
 from locators.interactions_locators import SelectablePageLocators
 from locators.interactions_locators import ResizablePageLocators
+from locators.interactions_locators import DroppablePageLocators
 
 class SortablePage(BasePage):
 
@@ -115,3 +116,101 @@ class ResizablePage(BasePage):
         min_size = self.get_px_from_width_height(self.get_max_min_size(self.locators.RESIZABLE))
 
         return max_size, min_size
+
+class DroppablePage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = DroppablePageLocators()
+
+    def check_simple(self):
+        self.element_is_visible(self.locators.BUTTON_SIMPLE).click()
+        drag_me = self.element_is_visible(self.locators.DRAG_ME_SIMPLE)
+        drop_here = self.element_is_visible(self.locators.DROP_HERE_SIMPLE)
+        text_before_drop = drop_here.text
+        self.drag_and_drop_elements(drag_me, drop_here)
+        text_after_drop = drop_here.text
+
+        return text_before_drop, text_after_drop
+
+    def check_acceptable(self):
+        self.element_is_visible(self.locators.BUTTON_ACCEPT).click()
+        acceptable = self.element_is_visible(self.locators.ACCEPTABLE)
+        drop_here = self.element_is_visible(self.locators.DROP_HERE_ACCEPT)
+        text_before_drop = drop_here.text
+        self.drag_and_drop_elements(acceptable, drop_here)
+        text_after_drop = drop_here.text
+
+        return text_before_drop, text_after_drop
+
+    def check_not_acceptable(self):
+        self.element_is_visible(self.locators.BUTTON_ACCEPT).click()
+        not_acceptable = self.element_is_visible(self.locators.NOT_ACCEPTABLE)
+        drop_here = self.element_is_visible(self.locators.DROP_HERE_ACCEPT)
+        text_before_drop = drop_here.text
+        self.drag_and_drop_elements(not_acceptable, drop_here)
+        text_after_drop = drop_here.text
+
+        return text_before_drop, text_after_drop
+
+    def check_prevent_propogation(self, drop_box):
+
+        self.element_is_visible(self.locators.BUTTON_PREVENT_PROPOGATION).click()
+        drag_me = self.element_is_visible(self.locators.DRAG_ME_PREVENT_PROPOGATION)
+        boxes_list = {
+            'not greedy': {
+                'outer_droppable': self.element_is_visible(self.locators.NOT_GREEDY_OUTER_DROPPABLE),
+                'inner_droppable': self.element_is_visible(self.locators.NOT_GREEDY_INNER_DROPPABLE)
+            },
+            'greedy': {
+                'outer_droppable': self.element_is_visible(self.locators.GREEDY_OUTER_DROPPABLE),
+                'inner_droppable': self.element_is_visible(self.locators.GREEDY_INNER_DROPPABLE)
+            }
+        }
+
+        if drop_box == 'not greedy':
+            text_outer_droppable_before_drop = boxes_list['not greedy']['outer_droppable'].text
+            text_inner_droppable_before_drop = boxes_list['not greedy']['inner_droppable'].text
+            self.drag_and_drop_elements(drag_me, boxes_list['not greedy']['inner_droppable'])
+            text_outer_droppable_after_drop = boxes_list['not greedy']['outer_droppable'].text
+            text_inner_droppable_after_drop = boxes_list['not greedy']['inner_droppable'].text
+
+            return text_outer_droppable_before_drop, text_inner_droppable_before_drop, text_outer_droppable_after_drop, text_inner_droppable_after_drop
+
+        if drop_box == 'greedy inner':
+            text_outer_droppable_before_drop = boxes_list['greedy']['outer_droppable'].text
+            text_inner_droppable_before_drop = boxes_list['greedy']['inner_droppable'].text
+            self.drag_and_drop_elements(drag_me, boxes_list['greedy']['inner_droppable'])
+            text_outer_droppable_after_drop = boxes_list['greedy']['outer_droppable'].text
+            text_inner_droppable_after_drop = boxes_list['greedy']['inner_droppable'].text
+
+            return text_outer_droppable_before_drop, text_inner_droppable_before_drop, text_outer_droppable_after_drop, text_inner_droppable_after_drop
+
+        if drop_box == 'greedy outer':
+            text_outer_droppable_before_drop = boxes_list['greedy']['outer_droppable'].text
+            text_inner_droppable_before_drop = boxes_list['greedy']['inner_droppable'].text
+            self.drag_and_drop_elements(drag_me, boxes_list['greedy']['outer_droppable'])
+            text_outer_droppable_after_drop = boxes_list['greedy']['outer_droppable'].text
+            text_inner_droppable_after_drop = boxes_list['greedy']['inner_droppable'].text
+
+            return text_outer_droppable_before_drop, text_inner_droppable_before_drop, text_outer_droppable_after_drop, text_inner_droppable_after_drop
+
+    def check_revert_draggable(self, type_drag):
+
+        self.element_is_visible(self.locators.BUTTON_REVERT_DRAGGABLE).click()
+
+        drags = {
+            'will': self.element_is_visible(self.locators.WILL_REVERT),
+            'not will': self.element_is_visible(self.locators.NOT_REVERT),
+            'drop_here': self.element_is_visible(self.locators.DROP_HERE_REVERT_DRAGGABLE)
+        }
+
+        revert = drags[type_drag]
+        drop_here = drags['drop_here']
+        self.drag_and_drop_elements(revert, drop_here)
+        position_after_move = revert.get_attribute('style')
+        time.sleep(0.5)
+        position_after_revert = revert.get_attribute('style')
+
+        return position_after_move, position_after_revert

@@ -1,6 +1,7 @@
 from pages.interations_page import SortablePage
 from pages.interations_page import SelectablePage
 from pages.interations_page import ResizablePage
+from pages.interations_page import DroppablePage
 
 
 class TestSortablePage:
@@ -45,3 +46,64 @@ class TestResizablePage:
         resizable_page.open_site()
         max_size, min_size = resizable_page.change_size_resizable()
         assert max_size != min_size
+
+class TestDroppablePage:
+
+    def test_simple(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        text_before_drop, text_after_drop = droppable_page.check_simple()
+        assert text_before_drop == 'Drop here'
+        assert text_after_drop == 'Dropped!', 'Element has not been dropped'
+
+    def test_acceptable(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        text_before_drop, text_after_drop = droppable_page.check_acceptable()
+        assert text_before_drop == 'Drop here'
+        assert text_after_drop == 'Dropped!', 'Element has not been accepted'
+
+    def test_not_acceptable(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        text_before_drop, text_after_drop = droppable_page.check_not_acceptable()
+        assert text_before_drop == 'Drop here'
+        assert text_after_drop == 'Drop here', 'Element has been accepted'
+
+    def test_prevent_propogation_not_greedy(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        (text_outer_droppable_before_drop, text_inner_droppable_before_drop,
+         text_outer_droppable_after_drop, text_inner_droppable_after_drop) = droppable_page.check_prevent_propogation('not greedy')
+        assert text_outer_droppable_before_drop == 'Outer droppable'
+        assert text_inner_droppable_before_drop == 'Inner droppable (not greedy)'
+        assert text_outer_droppable_after_drop == 'Dropped!', 'Element has not been dropped'
+        assert text_inner_droppable_after_drop == 'Dropped!', 'Element has not been dropped'
+
+    def test_prevent_propogation_greedy_inner(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        (text_outer_droppable_before_drop, text_inner_droppable_before_drop,
+         text_outer_droppable_after_drop, text_inner_droppable_after_drop) = droppable_page.check_prevent_propogation('greedy inner')
+        assert text_outer_droppable_before_drop == 'Outer droppable'
+        assert text_inner_droppable_before_drop == 'Inner droppable (greedy)'
+        assert text_outer_droppable_after_drop == 'Outer droppable'
+        assert text_inner_droppable_after_drop == 'Dropped!', 'Element has not been dropped'
+
+    def test_prevent_propogation_greedy_outer(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        (text_outer_droppable_before_drop, text_inner_droppable_before_drop,
+         text_outer_droppable_after_drop, text_inner_droppable_after_drop) = droppable_page.check_prevent_propogation('greedy outer')
+        assert text_outer_droppable_before_drop == 'Outer droppable'
+        assert text_inner_droppable_before_drop == 'Inner droppable (greedy)'
+        assert text_outer_droppable_after_drop == 'Dropped!', 'Element has not been dropped'
+        assert text_inner_droppable_after_drop == 'Inner droppable (greedy)'
+
+    def test_revert_draggable(self, driver):
+        droppable_page = DroppablePage(driver, 'https://demoqa.com/droppable')
+        droppable_page.open_site()
+        position_after_move_will, position_after_revert_will = droppable_page.check_revert_draggable('will')
+        position_after_move_not_will, position_after_revert_not_will = droppable_page.check_revert_draggable('not will')
+        assert position_after_move_will != position_after_revert_will, 'Element has not been reverted'
+        assert position_after_move_not_will == position_after_revert_not_will, 'Element has been reverted'
