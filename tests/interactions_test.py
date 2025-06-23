@@ -2,6 +2,7 @@ from pages.interations_page import SortablePage
 from pages.interations_page import SelectablePage
 from pages.interations_page import ResizablePage
 from pages.interations_page import DroppablePage
+from pages.interations_page import DraggablePage
 
 
 class TestSortablePage:
@@ -107,3 +108,29 @@ class TestDroppablePage:
         position_after_move_not_will, position_after_revert_not_will = droppable_page.check_revert_draggable('not will')
         assert position_after_move_will != position_after_revert_will, 'Element has not been reverted'
         assert position_after_move_not_will == position_after_revert_not_will, 'Element has been reverted'
+
+class TestDraggablePage:
+
+    def test_simple(self, driver):
+        draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+        draggable_page.open_site()
+        position_before, position_after = draggable_page.check_simple()
+        assert position_before != position_after, 'Position of the box has not been changed'
+
+    def test_axis_restricted(self, driver):
+        draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+        draggable_page.open_site()
+        x_left, x_top = draggable_page.check_axis_restricted('only_x')
+        y_left, y_top = draggable_page.check_axis_restricted('only_y')
+        assert x_left != 0, 'Position x-axis has not changed'
+        assert x_top == 0, 'Position has changed or there has been a shift in the y-axis'
+        assert y_left == 0, 'Position has changed or there has been a shift in the x-axis'
+        assert y_top != 0, 'Position y-axis has not changed'
+
+    def test_container_restricted(self, driver):
+        draggable_page = DraggablePage(driver, 'https://demoqa.com/dragabble')
+        draggable_page.open_site()
+        position_box = draggable_page.check_container_restricted('box')
+        position_parent = draggable_page.check_container_restricted('parent')
+        assert position_box <= [868.198, 107.198], 'Box position is outside the frame'
+        assert position_parent <= [14.0991, 87.1934], 'Box position is outside the frame'

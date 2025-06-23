@@ -1,4 +1,5 @@
 import random
+import re
 import time
 
 from pages.base_page import BasePage
@@ -6,6 +7,7 @@ from locators.interactions_locators import SortablePageLocators
 from locators.interactions_locators import SelectablePageLocators
 from locators.interactions_locators import ResizablePageLocators
 from locators.interactions_locators import DroppablePageLocators
+from locators.interactions_locators import DraggablePageLocators
 
 class SortablePage(BasePage):
 
@@ -214,3 +216,51 @@ class DroppablePage(BasePage):
         position_after_revert = revert.get_attribute('style')
 
         return position_after_move, position_after_revert
+
+class DraggablePage(BasePage):
+
+    def __init__(self, driver, url):
+        super().__init__(driver, url)
+
+    locators = DraggablePageLocators()
+
+    def check_simple(self):
+        self.element_is_visible(self.locators.BUTTON_SIMPLE).click()
+        drag_me = self.element_is_visible(self.locators.DRAG_ME_SIMPLE)
+        position_before = drag_me.get_attribute('style')
+        self.slide_drag_and_drop(drag_me, random.randint(1, 200), random.randint(1, 200))
+        position_after = drag_me.get_attribute('style')
+
+        return position_before, position_after
+
+    def get_position(self, element):
+        position = re.findall(r"\d+\.\d+|\d+", element)
+
+        return position
+
+    def check_axis_restricted(self, coord):
+        self.element_is_visible(self.locators.BUTTON_AXIS_RESTRICTED).click()
+
+        coordinates = {
+            'only_x': self.element_is_visible(self.locators.ONLY_X),
+            'only_y': self.element_is_visible(self.locators.ONLY_Y)
+        }
+
+        element = coordinates[coord]
+        self.slide_drag_and_drop(element, random.randint(-100, 100), random.randint(-100, 100))
+        position_after_move = self.get_position(element.get_attribute('style'))
+
+        return [int(dig) for dig in position_after_move]
+
+    def check_container_restricted(self, cont):
+        self.element_is_visible(self.locators.BUTTON_CONTAINER_RESTRICTED).click()
+        contained = {
+            'box': self.element_is_visible(self.locators.WITHIN_BOX),
+            'parent': self.element_is_visible(self.locators.WITHIN_PARENT)
+        }
+
+        element = contained[cont]
+        self.slide_drag_and_drop(element, 900, 120)
+        position_after_move = self.get_position(element.get_attribute('style'))
+
+        return [float(dig) for dig in position_after_move]
