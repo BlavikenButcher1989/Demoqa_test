@@ -1,6 +1,9 @@
 import base64
+import datetime
 import os
 import random
+
+
 import requests
 
 from selenium.common.exceptions import TimeoutException
@@ -154,6 +157,7 @@ class WebTablePage(BasePage):
         return data
 
     def search_some_person(self, key_word):
+        self.element_is_visible(self.locators.SEARCH_INPUT).click()
         self.element_is_visible(self.locators.SEARCH_INPUT).send_keys(key_word)
 
     def check_search_person(self):
@@ -172,7 +176,7 @@ class WebTablePage(BasePage):
 
         return str(age)
 
-    def delete_persone(self):
+    def delete_person(self):
         self.element_is_visible(self.locators.DELETE_BUTTON).click()
 
     def check_deleted(self):
@@ -336,9 +340,13 @@ class DynamicPropertiesPage(BasePage):
 
         return color_button_after
 
+
     def check_appear_of_button(self):
         try:
+            start_time = datetime.datetime.now()
             self.element_is_present(self.locators.VISIBLE_AFTER_FIVE_SECOND_BUTTON)
-            return True
+            end_time = datetime.datetime.now()
+            final_time = end_time - start_time
+            return True, round(final_time.total_seconds())
         except TimeoutException:
             return False
